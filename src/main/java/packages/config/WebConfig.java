@@ -1,12 +1,15 @@
 package packages.config;
 
 
+import nz.net.ultraq.thymeleaf.LayoutDialect;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.thymeleaf.spring5.SpringTemplateEngine;
 import org.thymeleaf.spring5.templateresolver.SpringResourceTemplateResolver;
 import org.thymeleaf.spring5.view.ThymeleafViewResolver;
@@ -15,15 +18,16 @@ import org.thymeleaf.templatemode.TemplateMode;
 @Configuration
 @EnableWebMvc
 @ComponentScan(basePackages = "packages")
-public class WebConfig implements ApplicationContextAware {
+public class WebConfig implements ApplicationContextAware, WebMvcConfigurer {
     private ApplicationContext applicationContext;
+
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) {
         this.applicationContext = applicationContext;
     }
 
     @Bean
-    public SpringResourceTemplateResolver templateResolver(){
+    public SpringResourceTemplateResolver templateResolver() {
         // SpringResourceTemplateResolver automatically integrates with Spring's own
         // resource resolution infrastructure, which is highly recommended.
         SpringResourceTemplateResolver templateResolver = new SpringResourceTemplateResolver();
@@ -39,11 +43,12 @@ public class WebConfig implements ApplicationContextAware {
     }
 
     @Bean
-    public SpringTemplateEngine templateEngine(){
+    public SpringTemplateEngine templateEngine() {
         // SpringTemplateEngine automatically applies SpringStandardDialect and
         // enables Spring's own MessageSource message resolution mechanisms.
         SpringTemplateEngine templateEngine = new SpringTemplateEngine();
         templateEngine.setTemplateResolver(templateResolver());
+        templateEngine.addDialect(new LayoutDialect());
         // Enabling the SpringEL compiler with Spring 4.2.4 or newer can
         // speed up execution in most scenarios, but might be incompatible
         // with specific cases when expressions in one template are reused
@@ -54,9 +59,20 @@ public class WebConfig implements ApplicationContextAware {
     }
 
     @Bean
-    public ThymeleafViewResolver viewResolver(){
+    public ThymeleafViewResolver viewResolver() {
         ThymeleafViewResolver viewResolver = new ThymeleafViewResolver();
         viewResolver.setTemplateEngine(templateEngine());
         return viewResolver;
+    }
+
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry
+                .addResourceHandler("/resources/**")
+                .addResourceLocations("/resources/");
+        registry
+                .addResourceHandler("/webjars/**")
+                .addResourceLocations("/webjars/");
+
     }
 }
