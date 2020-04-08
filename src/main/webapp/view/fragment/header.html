@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>header</title>
+</head>
+<body>
+<div th:fragment="header" class="custom-header">
+    <nav class="navbar navbar-expand-sm bg-dark navbar-dark d-flex">
+        <!-- Brand -->
+        <a class="navbar-brand flex-row" href="#">Logo</a>
+
+        <div class="right-header">
+            <!-- Links -->
+            <ul class="navbar-nav flex-row-reverse">
+                <!-- Dropdown -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
+                        User
+                    </a>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item" href="#">Info</a>
+                        <a class="dropdown-item" href="#">Link 2</a>
+                        <a class="dropdown-item" href="#">Log out</a>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Link 2</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Localization</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+</div>
+</body>
+</html>
