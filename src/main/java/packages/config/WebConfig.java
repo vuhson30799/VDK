@@ -77,6 +77,11 @@ public class WebConfig implements ApplicationContextAware, WebMvcConfigurer {
     }
 
     @Bean
+    public TimeSheetService timeSheetService(){
+        return new TimeSheetServiceImpl();
+    }
+
+    @Bean
     public SpringResourceTemplateResolver templateResolver() {
         // SpringResourceTemplateResolver automatically integrates with Spring's own
         // resource resolution infrastructure, which is highly recommended.

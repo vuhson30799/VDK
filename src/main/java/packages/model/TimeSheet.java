@@ -12,18 +12,21 @@ import java.util.Date;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "timeSheet", schema = "public")
+@Table(name = "time_sheet", schema = "public")
 public class TimeSheet {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     @NotNull
+    @Column(name = "work_time")
     private float workTime;
 
     @NotNull
+    @Column(name = "outside_time")
     private float outsideTime;
 
+    @Column(name = "work_date")
     private Date workDate;
 
     private String description;
