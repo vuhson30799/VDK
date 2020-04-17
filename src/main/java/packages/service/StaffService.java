@@ -13,4 +13,5 @@ public interface StaffService {
     void save(Staff staff);
     void remove(Staff staff);
     List<Staff> findAllByDepartment(Department department);
+    Staff findByEmail(String email);
 }

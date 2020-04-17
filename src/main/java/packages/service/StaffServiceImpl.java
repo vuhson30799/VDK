@@ -35,5 +35,10 @@ public class StaffServiceImpl implements StaffService {
         return staffRepository.findAllByDepartment(department);
     }
 
+    @Override
+    public Staff findByEmail(String email) {
+        return staffRepository.findByEmail(email);
+    }
+
 
 }
