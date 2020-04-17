@@ -8,4 +8,5 @@ import java.util.List;
 
 public interface StaffRepository extends JpaRepository<Staff,Long> {
     List<Staff> findAllByDepartment(Department department);
+    Staff findByEmail(String email);
 }

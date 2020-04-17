@@ -8,10 +8,11 @@
     <link rel="stylesheet" th:href="@{/resources/css/header.css}"/>
     <link rel="stylesheet" th:href="@{/resources/css/template.css}"/>
     <link rel="stylesheet" th:href="@{/resources/css/menu.css}"/>
+    <script type="text/javascript" th:src="@{/resources/js/header.js}"></script>
     <script type="text/javascript" th:src="@{/webjars/jquery/3.0.0/jquery.min.js}"></script>
     <script type="text/javascript" th:src="@{/webjars/bootstrap/4.1.3/js/bootstrap.min.js}"></script>
 </head>
-<body>
+<body th:attr="onload='loadUsername(\'' + ${#authentication.name} + '\')'">
 <header layout:fragment="custom-header">
     <div th:insert="fragment/header :: header">
 

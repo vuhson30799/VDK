@@ -29,32 +29,32 @@ public class StaffController {
     @ModelAttribute("departments")
     public List<Department> departments(){return departmentService.findAll();}
 
-    @GetMapping("/staffs")
+    @GetMapping("/staff")
     public ModelAndView findAll(){
         List<Staff> staff = staffService.findAll();
 
         return new ModelAndView("staff/list","staffs",staff);
     }
 
-    @PostMapping("/create-staff")
+    @PostMapping("/staff/create")
     public String create(@ModelAttribute("staff") Staff staff){
         staffService.save(staff);
-        return "redirect:/staffs";
+        return "redirect:/staff";
     }
 
-    @PostMapping("/update-staff")
+    @PostMapping("/staff/update")
     public String update(@ModelAttribute("staff")Staff staff){
         staffService.save(staff);
-        return "redirect:/staffs";
+        return "redirect:/staff";
     }
 
-    @PostMapping("/delete-staff")
+    @PostMapping("/staff/delete")
     public String delete(@ModelAttribute("staff")Staff staff){
         staffService.remove(staff);
-        return "redirect:/staffs";
+        return "redirect:/staff";
     }
 
-    @GetMapping("view-staff/{id}")
+    @GetMapping("/staff/view/{id}")
     public String view(@PathVariable("id")Long id,Model model){
         model.addAttribute("staff",staffService.findById(id));
         return "staff/view";

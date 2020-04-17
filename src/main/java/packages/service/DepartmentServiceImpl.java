@@ -20,6 +20,11 @@ public class DepartmentServiceImpl implements DepartmentService {
     }
 
     @Override
+    public Department findByName(String name) {
+        return departmentRepository.findByName(name);
+    }
+
+    @Override
     public void save(Department department) {
         departmentRepository.save(department);
     }
