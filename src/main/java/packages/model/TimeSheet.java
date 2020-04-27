@@ -6,24 +6,28 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.time.LocalTime;
 import java.util.Date;
 
 @Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "timeSheet", schema = "public")
+@Table(name = "time_sheet", schema = "public")
 public class TimeSheet {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     @NotNull
-    private float workTime;
+    @Column(name = "work_time")
+    private LocalTime workTime;
 
     @NotNull
-    private float outsideTime;
+    @Column(name = "outside_time")
+    private LocalTime outsideTime;
 
+    @Column(name = "work_date")
     private Date workDate;
 
     private String description;

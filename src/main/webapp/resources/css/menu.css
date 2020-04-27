@@ -7,3 +7,6 @@
 .final-list-group {
     height: 100%;
 }
+.list-group-item:hover {
+    cursor: pointer;
+}

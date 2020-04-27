@@ -1,0 +1,23 @@
+.month-calendar {
+    height: 80vh;
+}
+.status-content {
+    padding-right: 15px;
+}
+.header-table-month-calendar {
+    height: 5vh;
+}
+.base-cell-month-calendar {
+    width: 12ch;
+    height: 12ch;
+}
+.base-cell-month-calendar:hover {
+    cursor: pointer;
+}
+.displayFaded {
+    color: #dee2e6;
+    cursor: default;
+}
+.displayFaded:hover {
+    cursor: default; !important;
+}

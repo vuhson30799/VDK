@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>VDK</title>
+</head>
+<body>
+<div th:fragment="status-content" class="status-content">
+    <div>
+        <h1 class="text-center" th:text="${month + ' ' + year}"></h1>
+    </div>
+    <table class="table table-bordered month-calendar">
+        <tr class="table-primary header-table-month-calendar">
+            <th scope="col">Sun</th>
+            <th scope="col">Mon</th>
+            <th scope="col">Tue</th>
+            <th scope="col">Wed</th>
+            <th scope="col">Thu</th>
+            <th scope="col">Fri</th>
+            <th scope="col">Sat</th>
+        </tr>
+        <tr th:each="row,rowStat : ${currentMonthCalendar}" th:if="${row[1]}">
+            <td th:each="col,colStat : ${row}"
+                th:if="${col}" class="base-cell-month-calendar"
+                th:classappend="${(col.day > 20 && rowStat.index == 1 ) || (col.day < 7 && rowStat.index == 5)} ? 'displayFaded' : ''"
+                th:id="${(col.day > 20 && rowStat.index == 1 ) || (col.day < 7 && rowStat.index == 5)} ? '' : 'cell-' + ${col.day} + '-month-calendar'"
+                th:attr="onclick='displayStatusDay('+ ${col.day} +',\''+ ${month} +'\','+ ${year} +',\''+ ${#authentication.name} +'\',event)'"
+                data-toggle="modal"
+                data-target="#myModal">
+                <p th:text="${col.day}"></p>
+                <th:block th:if="${col.status}">
+                    <em class="fas fa-check-circle" style="color: dodgerblue" th:if="${col.status == 2}"></em>
+                    <em class="fas fa-check-circle" style="color: lawngreen" th:if="${col.status == 1}"></em>
+                    <em class="fas fa-exclamation-triangle" style="color: yellow" th:if="${col.status == -1}"></em>
+                </th:block>
+
+            </td>
+        </tr>
+    </table>
+
+    <div class="modal fade" id="myModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h4 class="modal-title" style="font-family: fantasy">Status Of This Day</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+
+                <!-- Modal body -->
+                <div class="modal-body" id="modal-content-body">
+                    <div class="container">
+                        <h3 style="font-family: fantasy">Work Time</h3>
+                        <hr>
+                        <p id="work-time-modal"></p>
+                    </div>
+                    <div class="container">
+                        <h3 style="font-family: fantasy">Outside Time</h3>
+                        <hr>
+                        <p id="outside-time-modal"></p>
+                    </div>
+                    <div class="container">
+                        <h3 style="font-family: fantasy">Description</h3>
+                        <hr>
+                        <p id="description" style="font-family: monospace"></p>
+                    </div>
+                </div>
+
+                <!-- Modal footer -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="failedModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h4 class="modal-title" style="font-family: fantasy">Status Of This Day</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+
+                <!-- Modal body -->
+                <div class="modal-body">
+                    <p style="font-family: fantasy">
+                        This day has not come yet!!
+                    </p>
+                </div>
+
+                <!-- Modal footer -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:fragment="content1">
+    <div>
+        <p>Hello Content1</p>
+    </div>
+</div>
+</body>
+</html>

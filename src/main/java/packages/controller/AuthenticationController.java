@@ -86,4 +86,9 @@ public class AuthenticationController {
         modelAndView.setViewName("registration");
         return modelAndView;
     }
+
+    @GetMapping("/access-denied")
+    public String accessDenied() {
+        return "error404";
+    }
 }
