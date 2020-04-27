@@ -8,7 +8,8 @@
     height: 5vh;
 }
 .base-cell-month-calendar {
-   width: 14ch;
+    width: 12ch;
+    height: 12ch;
 }
 .base-cell-month-calendar:hover {
     cursor: pointer;

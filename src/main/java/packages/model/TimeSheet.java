@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.time.LocalTime;
 import java.util.Date;
 
 @Entity
@@ -20,11 +21,11 @@ public class TimeSheet {
 
     @NotNull
     @Column(name = "work_time")
-    private float workTime;
+    private LocalTime workTime;
 
     @NotNull
     @Column(name = "outside_time")
-    private float outsideTime;
+    private LocalTime outsideTime;
 
     @Column(name = "work_date")
     private Date workDate;

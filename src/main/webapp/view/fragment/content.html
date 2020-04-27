@@ -11,23 +11,29 @@
     </div>
     <table class="table table-bordered month-calendar">
         <tr class="table-primary header-table-month-calendar">
-            <th>Sun</th>
-            <th>Mon</th>
-            <th>Tue</th>
-            <th>Wed</th>
-            <th>Thu</th>
-            <th>Fri</th>
-            <th>Sat</th>
+            <th scope="col">Sun</th>
+            <th scope="col">Mon</th>
+            <th scope="col">Tue</th>
+            <th scope="col">Wed</th>
+            <th scope="col">Thu</th>
+            <th scope="col">Fri</th>
+            <th scope="col">Sat</th>
         </tr>
         <tr th:each="row,rowStat : ${currentMonthCalendar}" th:if="${row[1]}">
             <td th:each="col,colStat : ${row}"
                 th:if="${col}" class="base-cell-month-calendar"
-                th:classappend="${(col > 20 && rowStat.index == 1 ) || (col < 7 && rowStat.index == 5)} ? 'displayFaded' : ''"
-                th:id="${(col > 20 && rowStat.index == 1 ) || (col < 7 && rowStat.index == 5)} ? '' : 'cell-' + ${col} + '-month-calendar'"
-                th:attr="onclick='displayStatusDay('+ ${col} +',\''+ ${month} +'\','+ ${year} +',\''+ ${#authentication.name} +'\',event)'"
+                th:classappend="${(col.day > 20 && rowStat.index == 1 ) || (col.day < 7 && rowStat.index == 5)} ? 'displayFaded' : ''"
+                th:id="${(col.day > 20 && rowStat.index == 1 ) || (col.day < 7 && rowStat.index == 5)} ? '' : 'cell-' + ${col.day} + '-month-calendar'"
+                th:attr="onclick='displayStatusDay('+ ${col.day} +',\''+ ${month} +'\','+ ${year} +',\''+ ${#authentication.name} +'\',event)'"
                 data-toggle="modal"
                 data-target="#myModal">
-                <p th:text="${col}"></p>
+                <p th:text="${col.day}"></p>
+                <th:block th:if="${col.status}">
+                    <em class="fas fa-check-circle" style="color: dodgerblue" th:if="${col.status == 2}"></em>
+                    <em class="fas fa-check-circle" style="color: lawngreen" th:if="${col.status == 1}"></em>
+                    <em class="fas fa-exclamation-triangle" style="color: yellow" th:if="${col.status == -1}"></em>
+                </th:block>
+
             </td>
         </tr>
     </table>

@@ -1,26 +1,52 @@
 package packages.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import packages.DTO.CalendarDTO;
+import packages.constant.BusinessConstant;
+import packages.model.Staff;
+import packages.model.User;
+import packages.service.StaffService;
+import packages.service.TimeSheetService;
+import packages.service.UserService;
 
+import java.security.Principal;
+import java.time.LocalTime;
 import java.util.*;
 
 @Controller
 public class HomeController {
+    private TimeSheetService timeSheetService;
+    private UserService userService;
+    private StaffService staffService;
+
+    @Autowired
+    public HomeController (TimeSheetService timeSheetService, UserService userService, StaffService staffService) {
+        this.timeSheetService = timeSheetService;
+        this.userService = userService;
+        this.staffService = staffService;
+    }
     @GetMapping("/")
     public String home(){
         return "home";
     }
 
     @GetMapping("/home")
-    public String test(Model model) {
-        Locale locale = new Locale("vi");
-        Calendar calendar = Calendar.getInstance(locale);
-        model.addAttribute("year", calendar.get(Calendar.YEAR));
-        model.addAttribute("month", convertNameMonth(calendar.get(Calendar.MONTH)));
-        model.addAttribute("currentMonthCalendar", createCurrentCalendar(calendar));
+    public String test(Model model, Principal principal) {
+        User user = userService.findByUserName(principal.getName());
+        if (user != null) {
+            Staff staff = staffService.findByEmail(user.getEmail());
+            if (staff != null) {
+                Locale locale = new Locale("vi");
+                Calendar calendar = Calendar.getInstance(locale);
+                model.addAttribute("year", calendar.get(Calendar.YEAR));
+                model.addAttribute("month", convertNameMonth(calendar.get(Calendar.MONTH)));
+                model.addAttribute("currentMonthCalendar", createCurrentCalendar(calendar,staff.getId()));
+            }
+        }
+
         return "fragment/content :: status-content";
     }
 
@@ -43,40 +69,49 @@ public class HomeController {
         }
     }
 
-    private Integer[][] createCurrentCalendar(Calendar calendar) {
+    private CalendarDTO[][] createCurrentCalendar(Calendar calendar, Long staffID) {
         int currentDayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
         int currentDayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
         int currentMonth = calendar.get(Calendar.MONTH);
-        int currentYear = calendar.get(Calendar.WEEK_OF_YEAR);
+        int currentYear = calendar.get(Calendar.YEAR);
 
         int dayOfLastMonth = findNumberOfLastMonth(currentMonth, currentYear);
-        Integer[][] currentMonthCalendar = new Integer[6][8];
-        int i = calendar.get(Calendar.WEEK_OF_MONTH), j = currentDayOfWeek;
+        CalendarDTO[][] currentMonthCalendar = new CalendarDTO[6][8];
+        List<CalendarDTO> statusCalendar = timeSheetService.findWorkTimeOfStaff(staffID,currentMonth,currentYear);
+
+        int startDefiniteDay = statusCalendar.get(0).getDay();
+        int endDefiniteDay = startDefiniteDay + statusCalendar.size() - 1;
+        int i = calendar.get(Calendar.WEEK_OF_MONTH);
+        int j = currentDayOfWeek;
         while (i >= 1) {
             while (j >= 1) {
                 if (currentDayOfMonth < 1) {
-                    currentMonthCalendar[i][j] = dayOfLastMonth--;
+                    currentMonthCalendar[i][j] = new CalendarDTO(dayOfLastMonth--);
                 }else {
-                    currentMonthCalendar[i][j] = currentDayOfMonth--;
+                    currentMonthCalendar[i][j] = currentDayOfMonth <= endDefiniteDay && currentDayOfMonth >= startDefiniteDay ? statusCalendar.get(currentDayOfMonth - startDefiniteDay) : new CalendarDTO(currentDayOfMonth);
+                    currentDayOfMonth--;
                 }
                 j--;
             }
             j = 7;
             i--;
         }
-
         currentDayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
         i = calendar.get(Calendar.WEEK_OF_MONTH);
         j = currentDayOfWeek;
-        int maximumDayOfMonth = calendar.getMaximum(Calendar.DAY_OF_MONTH);
+        int maximumDayOfMonth = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
+        boolean activated = false;
         while (i <= 5) {
             while (j <= 7) {
-                if (currentDayOfMonth > maximumDayOfMonth) {
+                if (currentDayOfMonth > maximumDayOfMonth || activated) {
                     currentDayOfMonth = 1;
-                    currentMonthCalendar[i][j] = currentDayOfMonth++;
+                    currentMonthCalendar[i][j] = new CalendarDTO(currentDayOfMonth);
+                    activated = true;
                 } else {
-                    currentMonthCalendar[i][j] = currentDayOfMonth++;
+                    currentMonthCalendar[i][j] = currentDayOfMonth <= endDefiniteDay && currentDayOfMonth >= startDefiniteDay ? statusCalendar.get(currentDayOfMonth - startDefiniteDay) : new CalendarDTO(currentDayOfMonth);
+
                 }
+                currentDayOfMonth++;
                 j++;
             }
             j = 1;
@@ -85,7 +120,6 @@ public class HomeController {
         return currentMonthCalendar;
     }
     private String convertNameMonth(int month) {
-        String nameMonth;
         switch (month) {
             case 0:
                 return "January";

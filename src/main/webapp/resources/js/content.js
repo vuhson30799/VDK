@@ -20,8 +20,8 @@ function displayStatusDay(day, month, year, username, event) {
                 workTimeModal.empty();
                 outsideTimeModal.empty();
                 descriptionModal.empty();
-                workTimeModal.append(data.timeSheet.workTime);
-                outsideTimeModal.append(data.timeSheet.outsideTime);
+                workTimeModal.append(convertToTimeFormat(data.timeSheet.workTime.hour, data.timeSheet.workTime.minute, data.timeSheet.workTime.second));
+                outsideTimeModal.append(convertToTimeFormat(data.timeSheet.outsideTime.hour, data.timeSheet.outsideTime.minute, data.timeSheet.outsideTime.second));
                 descriptionModal.append(data.timeSheet.description);
 
                 $('#myModal').modal('show');
@@ -60,5 +60,26 @@ function convertMonthToCalendarConstant(month) {
         case 'December':
             return 11;
     }
+}
 
+function convertToTimeFormat(hour, minute, second) {
+    let timeString = '';
+    if (hour < 10) {
+        timeString += '0' + hour;
+    } else {
+        timeString += hour
+    }
+    timeString += ':';
+    if (minute < 10) {
+        timeString += '0' + minute;
+    }else {
+        timeString += minute;
+    }
+    timeString += ':';
+    if (second < 10) {
+        timeString += '0' + second;
+    }else {
+        timeString += second;
+    }
+    return timeString;
 }
