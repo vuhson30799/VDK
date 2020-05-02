@@ -32,6 +32,35 @@ function displayStatusDay(day, month, year, username, event) {
         }
     })
 }
+function submitFormApplyingDayOff(username) {
+    let description = $('#text-area-description')[0].value;
+    let date = $('#day-off-picker')[0].value;
+    let currentDay = new Date();
+    if (date >= currentDay) {
+        $.ajax({
+            type : 'POST',
+            contentType: 'application/json',
+            url: '/content/apply-day-off',
+            data: JSON.stringify({
+                description : description,
+                date : date,
+                username : username
+            }),
+            success: function (data) {
+                $('#applying-day-off-modal').modal('hide');
+                activeMenu(1);
+            },
+            error: function (e) {
+                console.log(e.message);
+            }
+        });
+    } else {
+        $('#applying-day-off-modal').modal('hide');
+        $('#error-body-modal').append("This date was past. Applying day-off is allowed in future only.");
+        $('#error-applying-day-off').modal('show');
+    }
+
+}
 
 function convertMonthToCalendarConstant(month) {
     switch (month) {

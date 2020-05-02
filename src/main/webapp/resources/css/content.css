@@ -21,3 +21,9 @@
 .displayFaded:hover {
     cursor: default; !important;
 }
+.form-applying-day-off {
+    max-width: 360px;
+    margin-top: 20vh;
+    margin-left: 30vw;
+    padding-left: 10px;
+}

@@ -8,14 +8,39 @@ function activeMenu(index) {
 
     });
     $("#menu" + index).attr("class","list-group-item active");
-    displayCalendarStatus();
+    switch (index) {
+        case 1:
+            displayCalendarStatus();
+            break;
+        case 2:
+            applyingDayOff();
+            break;
+    }
+
 }
 
 function displayCalendarStatus() {
     $.ajax({
         type: "GET",
         contentType: "application/json",
-        url: "/home",
+        url: "/menu1",
+        timeout: 100000,
+        success: function (data) {
+            let contentTemplate = $("#content-template");
+            contentTemplate.empty();
+            contentTemplate.append(data);
+        },
+        error: function (e) {
+            console.log("error: " + e);
+        }
+    });
+}
+
+function applyingDayOff() {
+    $.ajax({
+        type: "GET",
+        contentType: "application/json",
+        url: "/menu2",
         timeout: 100000,
         success: function (data) {
             let contentTemplate = $("#content-template");

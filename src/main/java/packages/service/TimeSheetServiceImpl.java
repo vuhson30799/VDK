@@ -5,6 +5,7 @@ import packages.DTO.CalendarDTO;
 import packages.model.TimeSheet;
 import packages.repository.TimeSheetRepository;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
@@ -28,9 +29,9 @@ public class TimeSheetServiceImpl implements TimeSheetService {
     }
 
     @Override
-    public List<CalendarDTO> findWorkTimeOfStaff(Long id, int month, int year) {
+    public Map<Integer, CalendarDTO> findWorkTimeOfStaff(Long id, int month, int year) {
         List<TimeSheet> timeSheets =  timeSheetRepository.findWorkTimeOfStaffByDay(id, month + 1, year);
-        ArrayList<CalendarDTO> result = new ArrayList<>();
+        HashMap<Integer, CalendarDTO> result = new HashMap<>();
         Calendar calendar = Calendar.getInstance();
         for (TimeSheet x :
                 timeSheets) {
@@ -43,9 +44,16 @@ public class TimeSheetServiceImpl implements TimeSheetService {
             workTime = workTime.minus(outsideTime.getSecond(), ChronoUnit.SECONDS);
             calendarDTO.setDay(calendar.get(Calendar.DAY_OF_MONTH));
             calendarDTO.setWorkTime(workTime);
+            calendarDTO.setPassed(x.getWorkDate().before(new Date()));
+            calendarDTO.setApplyingDayOff(x.isApplyingDayOff());
             calendarDTO.setStatus();
-            result.add(calendarDTO);
+            result.put(calendar.get(Calendar.DAY_OF_MONTH), calendarDTO);
         }
         return result;
+    }
+
+    @Override
+    public void save(TimeSheet timeSheet) {
+        timeSheetRepository.save(timeSheet);
     }
 }

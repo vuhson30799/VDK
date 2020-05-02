@@ -5,13 +5,11 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.time.LocalTime;
 import java.util.Date;
 
 @Entity
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "time_sheet", schema = "public")
 public class TimeSheet {
@@ -19,20 +17,26 @@ public class TimeSheet {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @NotNull
-    @Column(name = "work_time")
+    @Column(name = "work_time",columnDefinition = "time default '00:00:00'")
     private LocalTime workTime;
 
-    @NotNull
     @Column(name = "outside_time")
     private LocalTime outsideTime;
 
-    @Column(name = "work_date")
+    @Column(name = "work_date",columnDefinition = "time default '00:00:00'")
     private Date workDate;
 
     private String description;
 
+    @Column(name = "applying_day_off")
+    private boolean applyingDayOff;
+
     @ManyToOne(targetEntity = Staff.class)
     @JoinColumn(name = "id_staff",nullable = false)
     private Staff staff;
+
+    public TimeSheet() {
+        this.workTime = LocalTime.of(0,0,0,0);
+        this.outsideTime = LocalTime.of(0,0,0,0);
+    }
 }

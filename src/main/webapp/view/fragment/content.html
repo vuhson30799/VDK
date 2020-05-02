@@ -32,6 +32,8 @@
                     <em class="fas fa-check-circle" style="color: dodgerblue" th:if="${col.status == 2}"></em>
                     <em class="fas fa-check-circle" style="color: lawngreen" th:if="${col.status == 1}"></em>
                     <em class="fas fa-exclamation-triangle" style="color: yellow" th:if="${col.status == -1}"></em>
+                    <em class="fas fa-exclamation-triangle" style="color: dodgerblue" th:if="${col.status == 3}"></em>
+                    <em class="fas fa-exclamation-triangle" th:if="${col.status == 4}"></em>
                 </th:block>
 
             </td>
@@ -102,9 +104,59 @@
     </div>
 </div>
 
-<div th:fragment="content1">
-    <div>
-        <p>Hello Content1</p>
+<div th:fragment="day-off-content">
+    <form class="border form-applying-day-off">
+        <div class="form-group">
+            <label>
+                Description
+                <textarea class="form-control" id="text-area-description" rows="3" cols="40"></textarea>
+            </label>
+        </div>
+        <div class="form-group">
+            <label>
+                Date
+                <br>
+                <input class="form-control" type="date" id="day-off-picker">
+            </label>
+        </div>
+        <div class="form-group">
+            <button type="button" class="btn btn-primary" data-toggle="modal"
+                    data-target="#applying-day-off-modal">Confirm</button>
+        </div>
+    </form>
+    <div class="modal fade" tabindex="-1" role="dialog" id="applying-day-off-modal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Are you sure?</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" th:attr="onclick='submitFormApplyingDayOff(\''+ ${#authentication.name} +'\')'" >Confirm</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" tabindex="-1" role="dialog" id="error-applying-day-off">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Error!!</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" id="error-body-modal">
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 </body>

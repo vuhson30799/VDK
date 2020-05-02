@@ -33,8 +33,8 @@ public class HomeController {
         return "home";
     }
 
-    @GetMapping("/home")
-    public String test(Model model, Principal principal) {
+    @GetMapping("/menu1")
+    public String displayMenu1(Model model, Principal principal) {
         User user = userService.findByUserName(principal.getName());
         if (user != null) {
             Staff staff = staffService.findByEmail(user.getEmail());
@@ -48,6 +48,11 @@ public class HomeController {
         }
 
         return "fragment/content :: status-content";
+    }
+
+    @GetMapping("/menu2")
+    public String displayMenu2() {
+        return "fragment/content :: day-off-content";
     }
 
     private int findNumberOfLastMonth(int currentMonth, int currentYear){
@@ -77,10 +82,8 @@ public class HomeController {
 
         int dayOfLastMonth = findNumberOfLastMonth(currentMonth, currentYear);
         CalendarDTO[][] currentMonthCalendar = new CalendarDTO[6][8];
-        List<CalendarDTO> statusCalendar = timeSheetService.findWorkTimeOfStaff(staffID,currentMonth,currentYear);
+        Map<Integer, CalendarDTO> statusCalendar = timeSheetService.findWorkTimeOfStaff(staffID,currentMonth,currentYear);
 
-        int startDefiniteDay = statusCalendar.get(0).getDay();
-        int endDefiniteDay = startDefiniteDay + statusCalendar.size() - 1;
         int i = calendar.get(Calendar.WEEK_OF_MONTH);
         int j = currentDayOfWeek;
         while (i >= 1) {
@@ -88,8 +91,7 @@ public class HomeController {
                 if (currentDayOfMonth < 1) {
                     currentMonthCalendar[i][j] = new CalendarDTO(dayOfLastMonth--);
                 }else {
-                    currentMonthCalendar[i][j] = currentDayOfMonth <= endDefiniteDay && currentDayOfMonth >= startDefiniteDay ? statusCalendar.get(currentDayOfMonth - startDefiniteDay) : new CalendarDTO(currentDayOfMonth);
-                    currentDayOfMonth--;
+                    currentMonthCalendar[i][j] = statusCalendar.get(currentDayOfMonth) != null ? statusCalendar.get(currentDayOfMonth--) : new CalendarDTO(currentDayOfMonth--);
                 }
                 j--;
             }
@@ -103,13 +105,14 @@ public class HomeController {
         boolean activated = false;
         while (i <= 5) {
             while (j <= 7) {
-                if (currentDayOfMonth > maximumDayOfMonth || activated) {
+                if (currentDayOfMonth > maximumDayOfMonth) {
                     currentDayOfMonth = 1;
-                    currentMonthCalendar[i][j] = new CalendarDTO(currentDayOfMonth);
                     activated = true;
+                }
+                if (activated) {
+                    currentMonthCalendar[i][j] = new CalendarDTO(currentDayOfMonth);
                 } else {
-                    currentMonthCalendar[i][j] = currentDayOfMonth <= endDefiniteDay && currentDayOfMonth >= startDefiniteDay ? statusCalendar.get(currentDayOfMonth - startDefiniteDay) : new CalendarDTO(currentDayOfMonth);
-
+                    currentMonthCalendar[i][j] = statusCalendar.get(currentDayOfMonth) != null ? statusCalendar.get(currentDayOfMonth) : new CalendarDTO(currentDayOfMonth);
                 }
                 currentDayOfMonth++;
                 j++;

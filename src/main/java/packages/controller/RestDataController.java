@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import packages.DTO.DayOffFormDTO;
 import packages.DTO.StatusDayDTO;
 import packages.DTO.TimeSheetDTO;
 import packages.model.Staff;
@@ -13,6 +14,7 @@ import packages.service.StaffService;
 import packages.service.TimeSheetService;
 import packages.service.UserService;
 
+import java.security.Principal;
 import java.util.Calendar;
 import java.util.List;
 
@@ -59,4 +61,22 @@ public class RestDataController {
         }
         return new ResponseEntity<>(statusDayDTO,HttpStatus.OK);
     }
+
+    @PostMapping(value = "/content/apply-day-off", produces = "application/json")
+    public ResponseEntity<Void> applyingDayOff(@RequestBody DayOffFormDTO dayOffFormDTO) {
+        User user = userService.findByUserName(dayOffFormDTO.getUsername());
+        if (user != null) {
+            Staff staff = staffService.findByEmail(user.getEmail());
+            TimeSheet timeSheet = new TimeSheet();
+            timeSheet.setStaff(staff);
+            timeSheet.setApplyingDayOff(true);
+            timeSheet.setDescription(dayOffFormDTO.getDescription());
+            timeSheet.setWorkDate(dayOffFormDTO.getDate());
+            timeSheetService.save(timeSheet);
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+
+    }
+
 }
