@@ -34,8 +34,8 @@
         <tr th:each="row,rowStat : ${currentMonthCalendar}" th:if="${row[1]}">
             <td th:each="col,colStat : ${row}"
                 th:if="${col}" class="base-cell-month-calendar"
-                th:classappend="${(col.day > 20 && rowStat.index == 1 ) || (col.day < 7 && rowStat.index == 5)} ? 'displayFaded' : ''"
-                th:id="${(col.day > 20 && rowStat.index == 1 ) || (col.day < 7 && rowStat.index == 5)} ? '' : 'cell-' + ${col.day} + '-month-calendar'"
+                th:classappend="${(col.day > 20 && rowStat.index == 1 ) || (col.day < 14 && rowStat.index >= 5)} ? 'displayFaded' : ''"
+                th:id="${(col.day > 20 && rowStat.index == 1 ) || (col.day < 14 && rowStat.index >= 5)} ? ${col.day} + 'faded' : 'cell-' + ${col.day} + '-month-calendar'"
                 th:attr="onclick='displayStatusDay('+ ${col.day} +',\''+ ${month} +'\','+ ${year} +',\''+ ${#authentication.name} +'\',event)'"
                 data-toggle="modal"
                 data-target="#myModal">
@@ -100,7 +100,7 @@
                 <!-- Modal body -->
                 <div class="modal-body">
                     <p style="font-family: fantasy">
-                        This day has not come yet!!
+                        This day has not come or logged in our system!!
                     </p>
                 </div>
 
