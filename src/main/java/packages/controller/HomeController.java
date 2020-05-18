@@ -97,7 +97,7 @@ public class HomeController {
         int currentYear = calendar.get(Calendar.YEAR);
 
         int dayOfLastMonth = findNumberOfLastMonth(currentMonth, currentYear);
-        CalendarDTO[][] currentMonthCalendar = new CalendarDTO[6][8];
+        CalendarDTO[][] currentMonthCalendar = new CalendarDTO[7][8];
         List<CalendarDTO> statusCalendar = timeSheetService.findWorkTimeOfStaff(staffID,currentMonth,currentYear);
 
         int startDefiniteDay = statusCalendar.get(0).getDay();
@@ -122,13 +122,15 @@ public class HomeController {
         j = currentDayOfWeek;
         int maximumDayOfMonth = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
         boolean activated = false;
-        while (i <= 5) {
+        while (i <= 6) {
             while (j <= 7) {
-                if (currentDayOfMonth > maximumDayOfMonth || activated) {
+                if (currentDayOfMonth > maximumDayOfMonth) {
                     currentDayOfMonth = 1;
                     currentMonthCalendar[i][j] = new CalendarDTO(currentDayOfMonth);
                     activated = true;
-                } else {
+                } else if (activated) {
+                    currentMonthCalendar[i][j] = new CalendarDTO(currentDayOfMonth);
+                }else {
                     currentMonthCalendar[i][j] = currentDayOfMonth <= endDefiniteDay && currentDayOfMonth >= startDefiniteDay ? statusCalendar.get(currentDayOfMonth - startDefiniteDay) : new CalendarDTO(currentDayOfMonth);
 
                 }

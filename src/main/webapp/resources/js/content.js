@@ -1,5 +1,10 @@
 function displayStatusDay(day, month, year, username, event) {
     event.stopPropagation();
+
+    let idElement = event.currentTarget.id;
+    if (idElement === day + 'faded') {
+        return;
+    }
     $.ajax({
         type: 'POST',
         contentType: 'application/json',
