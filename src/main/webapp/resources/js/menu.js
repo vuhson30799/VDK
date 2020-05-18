@@ -27,3 +27,30 @@ function displayCalendarStatus() {
         }
     });
 }
+
+function displayHistoryCalendar(month, year, option) {
+    let monthCalendar = convertMonthToCalendarConstant(month);
+    switch (option) {
+        case 'LAST_MONTH':
+            monthCalendar--;
+            break;
+        case 'NEXT_MONTH':
+            monthCalendar++;
+            break;
+    }
+    let url = "/home?month=" + monthCalendar + "&year=" + year;
+    $.ajax({
+        type: "GET",
+        contentType: "application/json",
+        url: url,
+        timeout: 100000,
+        success: function (data) {
+            let contentTemplate = $("#content-template");
+            contentTemplate.empty();
+            contentTemplate.append(data);
+        },
+        error: function (e) {
+            console.log("error: " + e);
+        }
+    });
+}

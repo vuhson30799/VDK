@@ -13,4 +13,5 @@ public interface TimeSheetService {
     TimeSheet findAllByStaffIdAndWorkDate(Long id, Date date);
     TimeSheet findByWorkDate(Date date);
     List<CalendarDTO> findWorkTimeOfStaff(Long id, int month, int year);
+    boolean isTimeSheetOfMonthExist(Integer month, Long id);
 }

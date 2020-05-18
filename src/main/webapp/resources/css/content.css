@@ -21,3 +21,7 @@
 .displayFaded:hover {
     cursor: default; !important;
 }
+.history-control-group {
+    padding-top: 10px;
+    margin-bottom: .5rem;
+}

@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 import packages.DTO.CalendarDTO;
 import packages.constant.BusinessConstant;
 import packages.model.Staff;
@@ -34,13 +36,24 @@ public class HomeController {
     }
 
     @GetMapping("/home")
-    public String test(Model model, Principal principal) {
+    public String test(Model model,
+                       Principal principal,
+                       @RequestParam(value = "month")Optional<Integer> month,
+                       @RequestParam(value = "year")Optional<Integer> year) {
+        int monthCalendar = month.orElse(-1);
+        int yearCalendar = year.orElse(-1);
         User user = userService.findByUserName(principal.getName());
         if (user != null) {
             Staff staff = staffService.findByEmail(user.getEmail());
             if (staff != null) {
                 Locale locale = new Locale("vi");
                 Calendar calendar = Calendar.getInstance(locale);
+                if (monthCalendar != -1 && yearCalendar != -1) {
+                    calendar.set(yearCalendar, monthCalendar, 1);
+                }
+                //Month in Calendar is one less than real month
+                model.addAttribute("isLastMonthExist",isLastMonthExist(calendar.get(Calendar.MONTH),staff.getId()));
+                model.addAttribute("isNextMonthExist", isNextMonthExist(calendar.get(Calendar.MONTH) + 2,staff.getId()));
                 model.addAttribute("year", calendar.get(Calendar.YEAR));
                 model.addAttribute("month", convertNameMonth(calendar.get(Calendar.MONTH)));
                 model.addAttribute("currentMonthCalendar", createCurrentCalendar(calendar,staff.getId()));
@@ -48,6 +61,14 @@ public class HomeController {
         }
 
         return "fragment/content :: status-content";
+    }
+
+    private boolean isNextMonthExist(Integer month, Long id) {
+        return timeSheetService.isTimeSheetOfMonthExist(month, id);
+    }
+
+    private boolean isLastMonthExist(Integer month, Long id) {
+        return timeSheetService.isTimeSheetOfMonthExist(month, id);
     }
 
     private int findNumberOfLastMonth(int currentMonth, int currentYear){
