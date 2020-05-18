@@ -15,4 +15,7 @@ public interface TimeSheetRepository extends JpaRepository<TimeSheet,Long> {
             "and extract(month from work_date) = ?2 " +
             "and extract (year from work_date) = ?3 order by extract (day from work_date) ASC", nativeQuery = true)
     List<TimeSheet> findWorkTimeOfStaffByDay(Long id, int month, int year);
+
+    @Query(value = "select exists (select * from time_sheet where extract(month from work_date) = ?1 and id_staff = ?2)",nativeQuery = true)
+    boolean isTimeSheetOfMonthExist(Integer month, Long id);
 }

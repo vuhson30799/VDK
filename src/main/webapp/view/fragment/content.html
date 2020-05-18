@@ -6,8 +6,20 @@
 </head>
 <body>
 <div th:fragment="status-content" class="status-content">
-    <div>
-        <h1 class="text-center" th:text="${month + ' ' + year}"></h1>
+    <div class="row">
+        <div class="col-2 history-control-group">
+            <button type="button" class="btn btn-primary d-inline"
+                    th:classappend="${isLastMonthExist ? '': 'disabled'}"
+                    th:attrappend="onclick='displayHistoryCalendar(\''+ ${month} + '\',' + ${year} + ',\'LAST_MONTH\')'">
+                <em class="fas fa-chevron-left"></em>
+            </button>
+            <button type="button" class="btn btn-primary"
+                    th:classappend="${isNextMonthExist ? '': 'disabled'}"
+                    th:attrappend="onclick='displayHistoryCalendar(\''+ ${month} + '\',' + ${year} + ',\'NEXT_MONTH\')'">
+                <em class="fas fa-chevron-right"></em>
+            </button>
+        </div>
+        <h1 class="text-center col-10" th:text="${month + ' ' + year}"></h1>
     </div>
     <table class="table table-bordered month-calendar">
         <tr class="table-primary header-table-month-calendar">

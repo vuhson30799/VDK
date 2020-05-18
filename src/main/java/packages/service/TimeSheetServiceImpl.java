@@ -48,4 +48,9 @@ public class TimeSheetServiceImpl implements TimeSheetService {
         }
         return result;
     }
+
+    @Override
+    public boolean isTimeSheetOfMonthExist(Integer month, Long id) {
+        return timeSheetRepository.isTimeSheetOfMonthExist(month, id);
+    }
 }
