@@ -57,6 +57,9 @@ public class WebConfig implements ApplicationContextAware, WebMvcConfigurer {
     @Value("${spring.jpa.database-platform}")
     private String dialect;
 
+    @Value("${spring.jpa.hibernate.ddl-auto}")
+    private String ddlAuto;
+
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) {
         this.applicationContext = applicationContext;
@@ -161,6 +164,7 @@ public class WebConfig implements ApplicationContextAware, WebMvcConfigurer {
     Properties additionalProperties(){
         Properties properties = new Properties();
         properties.setProperty("hibernate.dialect", dialect);
+        properties.setProperty("hibernate.hbm2ddl.auto", ddlAuto);
         return properties;
     }
     @Bean
